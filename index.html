@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!--Cloudflare Verification Source-->
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-  <!---->
-<meta charset="UTF-8">
-<title>Encrypt X - Obfuscator</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <title>Encrypt X - Obfuscator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
   body {
@@ -254,14 +251,6 @@
     <input type="text" id="customIdInput" maxlength="13" placeholder="Enter custom ID...">
   </div>
 
-  <!-- CLOUDFLARE VERIFICATION -->
-  <div class="cf-turnstile"
-     data-sitekey="0x4AAAAAAD5-A49kq1wFv4YR"
-     data-theme="dark"
-     data-callback="turnstileSuccess"
-     data-expired-callback="turnstileExpired">
-  </div>
-    
   <button onclick="obfuscate()">
     Obfuscate
   </button>
@@ -330,11 +319,6 @@ async function obfuscate() {
     return;
   }
 
-  if (!turnstileToken) {
-    alert("Please complete the Cloudflare verification first.");
-    return;
-  }
-  
   if (!keyToggle.checked) {
     key.value = "";
   }
@@ -359,8 +343,7 @@ async function obfuscate() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        script: script.value,
-        turnstileToken: turnstileToken
+        script: script.value
       })
     });
 
@@ -384,8 +367,8 @@ async function obfuscate() {
   keyToggle.disabled = false;
   customToggle.disabled = false;
 
-  if (!txt.includes("loadstring")) {
-    alert(txt);
+  if (!txt || !txt.includes("loadstring")) {
+    alert(txt || "Unknown response from obfuscation server");
     return;
   }
   
@@ -399,16 +382,6 @@ async function obfuscate() {
   key.value = "";
   custom.value = "";
 }
-
-// Cloudflare Turnstile Verification Function
-let turnstileToken = "";
-function turnstileSuccess(token) {
-  turnstileToken = token;
-}
-function turnstileExpired() {
-  turnstileToken = "";
-}
-//
 
 const keyInput = document.getElementById("keyInput");
 keyInput.addEventListener("input", () => {
